@@ -18,9 +18,9 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 option(BUILD_SHARED_LIBS "Build libraries as shared ones" OFF)
 option(ENABLE_PULL "Build prometheus-cpp pull library" ON)
-option(ENABLE_PUSH "Build prometheus-cpp push library" ON)
-option(ENABLE_COMPRESSION "Enable gzip compression" ON)
-option(ENABLE_TESTING "Build tests" ON)
+option(ENABLE_PUSH "Build prometheus-cpp push library" OFF)
+option(ENABLE_COMPRESSION "Enable gzip compression" OFF)
+option(ENABLE_TESTING "Build tests" OFF)
 option(USE_THIRDPARTY_LIBRARIES "Use 3rdParty submodules" ON)
 option(THIRDPARTY_CIVETWEB_WITH_SSL "Enable SSL support for embedded civetweb source code")
 option(OVERRIDE_CXX_STANDARD_FLAGS "Force building with -std=c++11 even if the CXXLFAGS are configured differently" ON)
@@ -29,7 +29,7 @@ option(RUN_IWYU "Run include-what-you-use" OFF)
 
 if(OVERRIDE_CXX_STANDARD_FLAGS)
   set(CMAKE_CXX_STANDARD 14)
-  set(CMAKE_CXX_EXTENSIONS Off)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
 # Set default directory permissions until
@@ -105,8 +105,11 @@ if(ENABLE_WARNINGS_AS_ERRORS AND NOT MSVC)
   )
 endif()
 
-# pkgconfig
+add_compile_options(
+  $<$<AND:$<STREQUAL:$<COMPILE_LANGUAGE>,CXX>,$<CXX_COMPILER_ID:GNU>>:-fPIC>
+)
 
+# pkgconfig
 if(GENERATE_PKGCONFIG)
   # see https://github.com/jupp0r/prometheus-cpp/issues/587
   if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")
@@ -123,7 +126,6 @@ if(GENERATE_PKGCONFIG)
 endif()
 
 # prometheus-cpp
-
 add_subdirectory(core)
 
 if(ENABLE_PULL)
@@ -135,7 +137,6 @@ if(ENABLE_PUSH)
 endif()
 
 # install
-
 include(CMakePackageConfigHelpers)
 
 install(
@@ -159,7 +160,6 @@ install(
 )
 
 # packaging
-
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   set(CPACK_PACKAGE_CONTACT "prometheus-cpp@@noreply.github.com")
   set(CPACK_PACKAGE_DESCRIPTION "${PROJECT_DESCRIPTION}")
@@ -183,7 +183,6 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif()
 
 # summary
-
 include(FeatureSummary)
 add_feature_info("Pull" "${ENABLE_PULL}" "support for pulling metrics")
 add_feature_info("Push" "${ENABLE_PUSH}" "support for pushing metrics to a push-gateway")

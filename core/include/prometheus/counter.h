@@ -38,6 +38,8 @@ class PROMETHEUS_CPP_CORE_EXPORT Counter {
   /// The counter will not change if the given amount is negative.
   void Increment(double);
 
+  void Reset();
+
   /// \brief Get the current value of the counter.
   double Value() const;
 

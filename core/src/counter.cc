@@ -11,6 +11,8 @@ void Counter::Increment(const double val) {
   gauge_.Increment(val);
 }
 
+void Counter::Reset() { gauge_.Set(0.0); }
+
 double Counter::Value() const { return gauge_.Value(); }
 
 ClientMetric Counter::Collect() const {

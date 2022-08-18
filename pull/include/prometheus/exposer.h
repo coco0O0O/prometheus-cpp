@@ -1,4 +1,6 @@
-#pragma once
+// #pragma once
+#ifndef __prometheus_exposer_h__
+#define __prometheus_exposer_h__
 
 #include <cstddef>
 #include <functional>
@@ -54,3 +56,5 @@ class PROMETHEUS_CPP_PULL_EXPORT Exposer {
 };
 
 }  // namespace prometheus
+
+#endif
